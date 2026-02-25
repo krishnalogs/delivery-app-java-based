@@ -15,7 +15,8 @@ pipeline {
         }
         stage ("Git Checkout") {
             steps {
-                git 'https://github.com/krishnalogs/delivery-app-java-based.git'
+                git branch: 'main', url: 'https://github.com/krishnalogs/delivery-app-java-based.git'
+                credentialsId: 'github-token'
             }
         }
         stage("Sonarqube Analysis"){
