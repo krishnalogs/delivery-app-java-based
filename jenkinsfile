@@ -49,7 +49,7 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Node Build') {
             steps {
                 sh '''
                   npm install
@@ -85,13 +85,23 @@ pipeline {
                 }
             }
         }
+
+        stage('Install Docker Scout') {
+            steps {
+                sh '''
+                    # Install Docker Scout CLI into /usr/local/bin
+                    curl -sSfL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh | sh -s -- -b /usr/local/bin
+                '''
+            }
+        }
+
         stage('Docker Scout Image') {
             steps {
                 script{
                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker'){
-                       sh 'sudo docker-scout quickview mohanbhogi05/zomato:latest'
-                       sh 'sudo docker-scout cves mohanbhogi05/zomato:latest'
-                       sh 'sudo docker-scout recommendations mohanbhogi05/zomato:latest'
+                       sh 'docker-scout quickview mohanbhogi05/zomato:latest'
+                       sh 'docker-scout cves mohanbhogi05/zomato:latest'
+                       sh 'docker-scout recommendations mohanbhogi05/zomato:latest'
                    }
                 }
             }
