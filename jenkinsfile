@@ -72,15 +72,15 @@ pipeline {
         }
         stage ("Build Docker Image") {
             steps {
-                sh "docker build -t zomato ."
+                sh "sudo docker build -t zomato ."
             }
         }
         stage ("Tag & Push to DockerHub") {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker') {
-                        sh "docker tag zomato mohanbhogi05/zomato:latest "
-                        sh "docker push mohanbhogi05/zomato:latest "
+                        sh "sudo docker tag zomato mohanbhogi05/zomato:latest "
+                        sh "sudo docker push mohanbhogi05/zomato:latest "
                     }
                 }
             }
@@ -89,16 +89,16 @@ pipeline {
             steps {
                 script{
                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
-                       sh 'docker-scout quickview mohanbhogi05/zomato:latest'
-                       sh 'docker-scout cves mohanbhogi05/zomato:latest'
-                       sh 'docker-scout recommendations mohanbhogi05/zomato:latest'
+                       sh 'sudo docker-scout quickview mohanbhogi05/zomato:latest'
+                       sh 'sudo docker-scout cves mohanbhogi05/zomato:latest'
+                       sh 'sudo docker-scout recommendations mohanbhogi05/zomato:latest'
                    }
                 }
             }
         }
         stage ("Deploy to Container") {
             steps {
-                sh 'docker run -d --name zomato -p 3000:3000 mohanbhogi05/zomato:latest'
+                sh 'sudo docker run -d --name zomato -p 3000:3000 mohanbhogi05/zomato:latest'
             }
         }
     }
